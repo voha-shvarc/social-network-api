@@ -1,5 +1,12 @@
 # Jetbrains
 .idea/
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
 # Environemnt
 venv/
+
+# DB
+db.sqlite3
