@@ -10,7 +10,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_("Email address"), unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    data_joined = models.DateTimeField(_("When joined"), default=timezone.now())
+    data_joined = models.DateTimeField(_("When joined"), default=timezone.now)
     last_active = models.DateTimeField(_("Last active"), blank=True, null=True)
 
     USERNAME_FIELD = "email"

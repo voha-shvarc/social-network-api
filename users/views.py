@@ -32,6 +32,7 @@ class UserAuthViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data.get("user")
+        update_last_login(None, user)
         tokens_data = AuthUserService.generate_tokens(user)
         response_data = JwtTokenRetrieveSerializer(tokens_data).data
 
