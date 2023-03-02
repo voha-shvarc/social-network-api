@@ -3,16 +3,16 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .serializers import UserSignUpSerializer, UserSignInSerializer, JwtTokenRetrieveSerializer
-from .services import AuthUserService
+from .serializers import UserSignUpSerializer, UserActivityRetrieveSerializer
+from .models import User
 
 
 class UserAuthViewSet(GenericViewSet):
     action_serializers = {
         "sign_up": UserSignUpSerializer,
-        "sign_in": UserSignInSerializer
     }
 
     def get_serializer_class(self):
@@ -26,14 +26,21 @@ class UserAuthViewSet(GenericViewSet):
 
         return Response({}, status=status.HTTP_201_CREATED)
 
-    @action(methods=("post",), detail=False, url_path="sign-in", url_name="sign-up")
-    def sign_in(self, request: Request, *args, **kwargs):
-        serializer: UserSignInSerializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
 
-        user = serializer.validated_data.get("user")
-        update_last_login(None, user)
-        tokens_data = AuthUserService.generate_tokens(user)
-        response_data = JwtTokenRetrieveSerializer(tokens_data).data
+class UserViewSet(GenericViewSet):
+    action_serializers = {
+        "activity": UserActivityRetrieveSerializer,
+    }
 
-        return Response(response_data, status.HTTP_200_OK)
+    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
+
+    def get_serializer_class(self):
+        return self.action_serializers.get(self.action, self.serializer_class)
+
+    @action(methods=("get",), detail=True, url_path="activity", url_name="activity")
+    def activity(self, request, pk=None):
+        user = self.get_object()
+        serializer = self.get_serializer(user)
+
+        return Response(serializer.data, status.HTTP_200_OK)

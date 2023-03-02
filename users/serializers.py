@@ -2,13 +2,14 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.serializers import Serializer, ModelSerializer, EmailField, CharField, ValidationError
+from rest_framework import serializers
 
 from .models import User
 
 
-class UserSignUpSerializer(ModelSerializer):
-    email = EmailField()
-    password = CharField()
+class UserSignUpSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
     @staticmethod
     def validate_password(value):
@@ -19,7 +20,7 @@ class UserSignUpSerializer(ModelSerializer):
     def validate_email(value):
         email = User.objects.normalize_email(value)
         if User.objects.filter(email=email).exists():
-            raise ValidationError({"error": "User with this email already exists"})
+            raise serializers.ValidationError({"error": "User with this email already exists"})
         return email
 
     class Meta:
@@ -27,9 +28,9 @@ class UserSignUpSerializer(ModelSerializer):
         fields = ("email", "password")
 
 
-class UserSignInSerializer(ModelSerializer):
-    email = EmailField()
-    password = CharField()
+class UserSignInSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
     def validate(self, attrs):
         email = attrs.get("email")
@@ -39,7 +40,7 @@ class UserSignInSerializer(ModelSerializer):
         if not user.check_password(password):
             print(f"Password {password} is not correct")
 
-            raise ValidationError({"error": "Wrong password"})
+            raise serializers.ValidationError({"error": "Wrong password"})
 
         attrs["user"] = user
         return attrs
@@ -48,10 +49,9 @@ class UserSignInSerializer(ModelSerializer):
         model = User
         fields = ("email", "password")
 
-class JwtTokenRetrieveSerializer(Serializer):
-    access_token = CharField()
-    refresh_token = CharField()
+
+class UserActivityRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ("access_token", "refresh_token")
-        read_only_fields = fields
+        model = User
+        fields = ("last_active", "last_login")
