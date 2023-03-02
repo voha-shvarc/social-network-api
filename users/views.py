@@ -3,7 +3,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.status import HTTP_201_CREATED, HTTP_200_OK
+from rest_framework import status
 
 from .serializers import UserSignUpSerializer, UserSignInSerializer, JwtTokenRetrieveSerializer
 from .services import AuthUserService
@@ -24,7 +24,7 @@ class UserAuthViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response({}, status=HTTP_201_CREATED)
+        return Response({}, status=status.HTTP_201_CREATED)
 
     @action(methods=("post",), detail=False, url_path="sign-in", url_name="sign-up")
     def sign_in(self, request: Request, *args, **kwargs):
@@ -36,4 +36,4 @@ class UserAuthViewSet(GenericViewSet):
         tokens_data = AuthUserService.generate_tokens(user)
         response_data = JwtTokenRetrieveSerializer(tokens_data).data
 
-        return Response(response_data, HTTP_200_OK)
+        return Response(response_data, status.HTTP_200_OK)

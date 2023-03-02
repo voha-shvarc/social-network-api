@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 class Post(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="posts")
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="posts", null=False, blank=False)
     date_added = models.DateTimeField(_("Date added"), default=timezone.now)
 
     def __str__(self):
@@ -14,8 +14,8 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="likes")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey("users.User", on_delete=models.CASCADE, related_name="likes", null=False, blank=False)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes", null=False, blank=False)
     date_added = models.DateTimeField(_("Date added"), default=timezone.now)
 
     def __str__(self):
