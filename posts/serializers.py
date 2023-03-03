@@ -24,5 +24,10 @@ class LikeCreationSerializer(serializers.ModelSerializer):
         return attrs
 
     class Meta:
-        fields = ("user", "post", "date_added")
+        fields = ("user", "post")
         model = Like
+
+
+class LikesAnalyticRetrieveSerializer(serializers.Serializer):
+    day = serializers.DateField()
+    likes_amount = serializers.IntegerField()
