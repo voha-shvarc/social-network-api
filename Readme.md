@@ -1,0 +1,1 @@
+# Simplified Social Network API using DRF
