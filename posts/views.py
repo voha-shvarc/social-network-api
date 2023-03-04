@@ -1,24 +1,21 @@
 from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
+from utils import BaseViewSet
 from .serializers import PostCreationSerializer, LikeCreationSerializer, LikesAnalyticRetrieveSerializer
-from .models import Like, Post
+from .models import Like
 from .services import LikesAnalyticService
 
 
-class PostViewSet(CreateModelMixin, GenericViewSet):
+class PostViewSet(CreateModelMixin, BaseViewSet):
     action_serializers = {
         "create": PostCreationSerializer,
         "like": LikeCreationSerializer
     }
     permission_classes = (IsAuthenticated,)
-
-    def get_serializer_class(self):
-        return self.action_serializers.get(self.action, self.serializer_class)
 
     @action(methods=("post",), detail=True, url_path="like", url_name="like")
     def like(self, request, pk=None):
@@ -36,13 +33,10 @@ class PostViewSet(CreateModelMixin, GenericViewSet):
             return Response({"error": "You don't have a like on this post yet"}, status.HTTP_400_BAD_REQUEST)
 
 
-class LikeViewSet(GenericViewSet):
+class LikeViewSet(BaseViewSet):
     action_serializers = {
         "analytics": LikesAnalyticRetrieveSerializer
     }
-
-    def get_serializer_class(self):
-        return self.action_serializers.get(self.action, self.serializer_class)
 
     @action(methods=("get",), detail=False, url_path="analytics", url_name="analytics")
     def analytics(self, request, *args, **kwargs):

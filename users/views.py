@@ -1,22 +1,18 @@
-from django.contrib.auth.models import update_last_login
-from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
+from utils import BaseViewSet
 from .serializers import UserSignUpSerializer, UserActivityRetrieveSerializer
 from .models import User
 
 
-class UserAuthViewSet(GenericViewSet):
+class UserAuthViewSet(BaseViewSet):
     action_serializers = {
         "sign_up": UserSignUpSerializer,
     }
-
-    def get_serializer_class(self):
-        return self.action_serializers.get(self.action, self.serializer_class)
 
     @action(methods=("post",), detail=False, url_path="sign-up", url_name="sign-up")
     def sign_up(self, request: Request, *args, **kwargs):
@@ -27,16 +23,13 @@ class UserAuthViewSet(GenericViewSet):
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-class UserViewSet(GenericViewSet):
+class UserViewSet(BaseViewSet):
     action_serializers = {
         "activity": UserActivityRetrieveSerializer,
     }
 
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
-
-    def get_serializer_class(self):
-        return self.action_serializers.get(self.action, self.serializer_class)
 
     @action(methods=("get",), detail=True, url_path="activity", url_name="activity")
     def activity(self, request, pk=None):
