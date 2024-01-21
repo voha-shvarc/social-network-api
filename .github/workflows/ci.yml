@@ -19,3 +19,14 @@ jobs:
         with:
           options: "--check --diff --color"
           src: "./users"
+
+  test:
+    name: "Run Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: "Checkout to the project source"
+
+      - name: "Execute Tests"
+        run: |
+          python manage.py test post.err
