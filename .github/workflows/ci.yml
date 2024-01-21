@@ -1,0 +1,21 @@
+name: "Continues Integration Workflow"
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  linting:
+    name: "Run Linting"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: psf/black@stable
+        with:
+          options: "--check --diff --color"
+          src: "./users"

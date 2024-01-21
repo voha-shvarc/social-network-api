@@ -6,20 +6,22 @@ from django.utils.timezone import utc
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0001_initial'),
+        ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='user',
-            old_name='is_stuff',
-            new_name='is_staff',
+            model_name="user",
+            old_name="is_stuff",
+            new_name="is_staff",
         ),
         migrations.AlterField(
-            model_name='user',
-            name='data_joined',
-            field=models.DateTimeField(default=datetime.datetime(2023, 3, 1, 9, 32, 23, 71683, tzinfo=utc), verbose_name='When joined'),
+            model_name="user",
+            name="data_joined",
+            field=models.DateTimeField(
+                default=datetime.datetime(2023, 3, 1, 9, 32, 23, 71683, tzinfo=utc),
+                verbose_name="When joined",
+            ),
         ),
     ]
