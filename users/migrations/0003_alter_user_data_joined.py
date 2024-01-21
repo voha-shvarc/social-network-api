@@ -5,15 +5,16 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('users', '0002_rename_is_stuff_user_is_staff_alter_user_data_joined'),
+        ("users", "0002_rename_is_stuff_user_is_staff_alter_user_data_joined"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='data_joined',
-            field=models.DateTimeField(default=django.utils.timezone.now, verbose_name='When joined'),
+            model_name="user",
+            name="data_joined",
+            field=models.DateTimeField(
+                default=django.utils.timezone.now, verbose_name="When joined"
+            ),
         ),
     ]

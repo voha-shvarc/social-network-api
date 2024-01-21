@@ -19,7 +19,9 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     def validate_email(value):
         email = User.objects.normalize_email(value)
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError({"error": "User with this email already exists"})
+            raise serializers.ValidationError(
+                {"error": "User with this email already exists"}
+            )
         return email
 
     class Meta:
@@ -50,7 +52,6 @@ class UserSignInSerializer(serializers.ModelSerializer):
 
 
 class UserActivityRetrieveSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ("last_active", "last_login")
