@@ -23,6 +23,7 @@ jobs:
   test:
     name: "Run Tests"
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - uses: actions/checkout@v4
         name: "Checkout to the project source"
@@ -37,5 +38,7 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: "Execute Tests"
+        env:
+          SECRET_KEY: $ {{ secrets.SECRET_KEY }}
         run: |
           python manage.py test
