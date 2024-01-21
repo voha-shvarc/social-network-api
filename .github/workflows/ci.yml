@@ -29,4 +29,4 @@ jobs:
 
       - name: "Execute Tests"
         run: |
-          python manage.py test post.err
+          python manage.py test
